@@ -18,7 +18,7 @@ function Navbar() {
   const [searchList, setSearchList] = useState(false);
 
   const wrapperRef = useRef(null);
-
+  
   const handleSearch = async () => {
     try {
       const res = await axios.get(

@@ -8,6 +8,7 @@ import { baseURI } from "../common/baseURI";
 
 function Network() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -15,10 +16,11 @@ function Network() {
 
   const getConnectionsList = async () => {
     try {
-      const response = await axios.get(
-        baseURI+"/api/profiles/connections",
-        { withCredentials: true }
-      );
+      const response = await axios.get(baseURI + "/api/profiles/connections", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = response?.data;
       setFollowers(data.followers || []);
       setFollowing(data.following || []);
@@ -29,9 +31,12 @@ function Network() {
 
   const getAllUsersList = async () => {
     try {
-      const response = await axios.get("https://devconnector-1-backend.onrender.com/api/profiles/", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://devconnector-1-backend.onrender.com/api/profiles/",
+        {
+          withCredentials: true,
+        }
+      );
       const data = response?.data;
       setSuggestions(data || []);
     } catch (err) {
@@ -50,7 +55,7 @@ function Network() {
       className="flex items-center gap-4 p-4 rounded-xl border bg-white shadow hover:shadow-md transition duration-300"
     >
       <img
-        src={baseURI+`/${user.image}`}
+        src={baseURI + `/${user.image}`}
         alt={user.userName}
         className="w-14 h-14 rounded-full object-cover border"
       />
@@ -90,8 +95,12 @@ function Network() {
   const toggleFollow = async (targetUserId) => {
     try {
       const response = await axios.get(
-        baseURI+`/api/profiles/${targetUserId}/follow`,
-        { withCredentials: true }
+        baseURI + `/api/profiles/${targetUserId}/follow`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       toast.success(response.data.msg);
       //     console.log("response>>",response)
@@ -112,9 +121,14 @@ function Network() {
 
   return (
     <>
-      <div className="hidden md:block"> <Navbar /></div>
-      <div className="block md:hidden"><MobileSidebar /></div>
-      
+      <div className="hidden md:block">
+        {" "}
+        <Navbar />
+      </div>
+      <div className="block md:hidden">
+        <MobileSidebar />
+      </div>
+
       <div className="px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
         <div className="max-w-5xl mx-auto space-y-10">
           <h1 className="text-3xl font-bold text-gray-800 ">My Network</h1>

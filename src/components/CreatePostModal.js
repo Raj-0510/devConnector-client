@@ -9,6 +9,8 @@ export default function CreatePostModal({ showModal, setShowModal }) {
     content: "",
     image: null,
   });
+   const token=localStorage.getItem("token");
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -29,11 +31,13 @@ export default function CreatePostModal({ showModal, setShowModal }) {
         formData.append("image", postData.image);
       }
       const response = await axios.post(
-        baseURI+"/api/feed/create-post",
+        baseURI + "/api/feed/create-post",
         formData,
         {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       toast.success(response.data.msg);

@@ -1,17 +1,21 @@
 import axios from "axios";
 import { baseURI } from "./baseURI";
 
- export const getProfileData = async (userId) => {
-    
-    try {
-      const url =baseURI+`/api/user-profile/get-user-profile-by-id/${userId}`;
-      const response = await axios.get(url, { withCredentials: true });
+export const getProfileData = async (userId) => {
+  try {
+      const token=localStorage.getItem("token");
 
-      const data = response?.data?.data;
-      console.log("data>>",data)
-      return data
+    const url = baseURI + `/api/user-profile/get-user-profile-by-id/${userId}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    } catch (err) {
-      console.log("Error fetching profile", err);
-    }
-  };
+    const data = response?.data?.data;
+    console.log("data>>", data);
+    return data;
+  } catch (err) {
+    console.log("Error fetching profile", err);
+  }
+};

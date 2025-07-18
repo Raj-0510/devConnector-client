@@ -14,23 +14,26 @@ function Dashboard({ from, deleteButton, userId }) {
   const location = useLocation();
   const [showCommentsMap, setShowCommentsMap] = useState({});
   const [newComment, setNewComment] = useState("");
+      const token=localStorage.getItem("token");
 
   const toggleComments = (postId) => {
-      setShowCommentsMap((prev) => ({
-    ...prev,
-    [postId]: !prev[postId],
-  }));
-
-
+    setShowCommentsMap((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
   };
 
   const handleAddComment = async (post) => {
     try {
       const userData = await getProfileData(localStorage.getItem("userId"));
       await axios.post(
-        baseURI+`/api/feed/add-comment/${post?._id}`,
+        baseURI + `/api/feed/add-comment/${post?._id}`,
         { userName: userData?.userName, content: newComment },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       socket.emit("sendNotification", {
         senderId: userData?.userId,
@@ -49,9 +52,13 @@ function Dashboard({ from, deleteButton, userId }) {
     try {
       const url =
         from === "postsView"
-          ? baseURI+`/api/feed/get-user-posts/${userId}`
-          : baseURI+"/api/feed/get-all-posts";
-      const response = await axios.get(url, { withCredentials: true });
+          ? baseURI + `/api/feed/get-user-posts/${userId}`
+          : baseURI + "/api/feed/get-all-posts";
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = response?.data;
       setPostData(data);
     } catch (err) {
@@ -62,8 +69,12 @@ function Dashboard({ from, deleteButton, userId }) {
   const handleDeletePost = async (postId) => {
     try {
       const response = await axios.delete(
-        baseURI+`/api/feed/delete-post/${postId}`,
-        { withCredentials: true }
+        baseURI + `/api/feed/delete-post/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       toast.success(response.data.msg);
       getAllPosts();
@@ -78,9 +89,13 @@ function Dashboard({ from, deleteButton, userId }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        baseURI+`/api/feed/toggle-like/${post?._id}`,
+        baseURI + `/api/feed/toggle-like/${post?._id}`,
         {},
-        { withCredentials: true }
+       {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
 
       console.log("response>>", response);
@@ -134,7 +149,7 @@ function Dashboard({ from, deleteButton, userId }) {
                 <img
                   src={
                     post?.profileImage
-                      ? baseURI+`/${post?.profileImage}`
+                      ? baseURI + `/${post?.profileImage}`
                       : "/default-avatar.png"
                   }
                   alt="user"
@@ -185,7 +200,7 @@ function Dashboard({ from, deleteButton, userId }) {
             {/* Image */}
             {post?.image && (
               <img
-                src={baseURI+`/${post?.image}`}
+                src={baseURI + `/${post?.image}`}
                 alt="post"
                 className="w-full rounded-md object-cover mt-3 max-h-[400px]"
               />
@@ -193,74 +208,76 @@ function Dashboard({ from, deleteButton, userId }) {
 
             {/* Actions */}
             <div className="flex flex-col">
-            <div className="flex gap-6 mt-4 text-sm font-medium text-gray-500">
-              <button
-                className="hover:text-blue-600 flex items-center gap-1"
-                onClick={(e) => toggleLike(e, post)}
-              >
-                👍 <span>Like</span>
-              </button>
-              <button
-                className="hover:text-blue-600 flex items-center gap-1"
-                onClick={()=>toggleComments(post?._id)}
-              >
-                💬 <span>Comment</span>
-              </button>
+              <div className="flex gap-6 mt-4 text-sm font-medium text-gray-500">
+                <button
+                  className="hover:text-blue-600 flex items-center gap-1"
+                  onClick={(e) => toggleLike(e, post)}
+                >
+                  👍 <span>Like</span>
+                </button>
+                <button
+                  className="hover:text-blue-600 flex items-center gap-1"
+                  onClick={() => toggleComments(post?._id)}
+                >
+                  💬 <span>Comment</span>
+                </button>
               </div>
               <div>
-              {showCommentsMap[post._id] && (
-                <div className="mt-4 border-t pt-4 space-y-4 flex flex-col">
-                  {/* Existing Comments */}
-                  <div>
-                    {post?.comments?.length > 0 ? (
-                      post.comments.map((comment, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-start gap-3 bg-gray-50 border rounded-lg p-3 shadow-sm mb-2"
-                        >
-                          {/* Optional avatar icon */}
-                          <div className="flex-shrink-0">
-                            <div className="w-9 h-9 bg-blue-200 text-blue-700 font-bold flex items-center justify-center rounded-full ">
-                              {comment?.userName?.charAt(0).toUpperCase()}
+                {showCommentsMap[post._id] && (
+                  <div className="mt-4 border-t pt-4 space-y-4 flex flex-col">
+                    {/* Existing Comments */}
+                    <div>
+                      {post?.comments?.length > 0 ? (
+                        post.comments.map((comment, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-3 bg-gray-50 border rounded-lg p-3 shadow-sm mb-2"
+                          >
+                            {/* Optional avatar icon */}
+                            <div className="flex-shrink-0">
+                              <div className="w-9 h-9 bg-blue-200 text-blue-700 font-bold flex items-center justify-center rounded-full ">
+                                {comment?.userName?.charAt(0).toUpperCase()}
+                              </div>
                             </div>
-                          </div>
 
-                          {/* Comment content */}
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <p className="font-medium text-gray-800">
-                                {comment?.userName}
+                            {/* Comment content */}
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between">
+                                <p className="font-medium text-gray-800">
+                                  {comment?.userName}
+                                </p>
+                                {/* Optional: Add timestamp or options */}
+                              </div>
+                              <p className="text-gray-600 text-sm mt-1">
+                                {comment?.content}
                               </p>
-                              {/* Optional: Add timestamp or options */}
                             </div>
-                            <p className="text-gray-600 text-sm mt-1">
-                              {comment?.content}
-                            </p>
                           </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-sm text-gray-500">No comments yet.</p>
-                    )}
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500">
+                          No comments yet.
+                        </p>
+                      )}
+                    </div>
+                    {/* New Comment Input */}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        className="flex-1 border px-3 py-1 rounded-md text-sm"
+                      />
+                      <button
+                        onClick={() => handleAddComment(post)}
+                        className="text-white bg-blue-600 px-3 py-1 rounded-md text-sm hover:bg-blue-700"
+                      >
+                        Post
+                      </button>
+                    </div>
                   </div>
-                  {/* New Comment Input */}
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="Add a comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      className="flex-1 border px-3 py-1 rounded-md text-sm"
-                    />
-                    <button
-                      onClick={() => handleAddComment(post)}
-                      className="text-white bg-blue-600 px-3 py-1 rounded-md text-sm hover:bg-blue-700"
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              )}
+                )}
               </div>
             </div>
           </div>
