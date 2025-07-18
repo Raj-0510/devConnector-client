@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar";
 import MobileSidebar from "../components/MobileSidebar";
+import { baseURI } from "../common/baseURI";
 
 function Network() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Network() {
   const getConnectionsList = async () => {
     try {
       const response = await axios.get(
-        "https://devconnector-1-backend.onrender.com/api/profiles/connections",
+        baseURI+"/api/profiles/connections",
         { withCredentials: true }
       );
       const data = response?.data;
@@ -49,7 +50,7 @@ function Network() {
       className="flex items-center gap-4 p-4 rounded-xl border bg-white shadow hover:shadow-md transition duration-300"
     >
       <img
-        src={`https://devconnector-1-backend.onrender.com/${user.image}`}
+        src={baseURI+`/${user.image}`}
         alt={user.userName}
         className="w-14 h-14 rounded-full object-cover border"
       />
@@ -89,7 +90,7 @@ function Network() {
   const toggleFollow = async (targetUserId) => {
     try {
       const response = await axios.get(
-        `https://devconnector-1-backend.onrender.com/api/profiles/${targetUserId}/follow`,
+        baseURI+`/api/profiles/${targetUserId}/follow`,
         { withCredentials: true }
       );
       toast.success(response.data.msg);

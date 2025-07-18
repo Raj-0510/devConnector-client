@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { baseURI } from "../common/baseURI";
 
 export default function DeleteProfileModalOpen({ showModal, setShowModal }) {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function DeleteProfileModalOpen({ showModal, setShowModal }) {
     
     try {
       const response = await axios.delete(
-        `https://devconnector-1-backend.onrender.com/api/user-profile/delete-user-profile/${userId}`,
+        baseURI+`/api/user-profile/delete-user-profile/${userId}`,
         {},
         {
           withCredentials: true,

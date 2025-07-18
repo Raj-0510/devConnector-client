@@ -10,6 +10,7 @@ import Dashboard from "./Dashboard";
 import DeleteProfileModalOpen from "../components/DeleteProfileModal";
 import MobileSidebar from "../components/MobileSidebar";
 import Navbar from "../components/Navbar";
+import { baseURI } from "../common/baseURI";
 
 function Profile() {
   const location = useLocation();
@@ -35,8 +36,8 @@ function Profile() {
     try {
       const url =
         userId === undefined
-          ? "https://devconnector-1-backend.onrender.com/api/user-profile/get-user-profile/me"
-          : `https://devconnector-1-backend.onrender.com/api/user-profile/get-user-profile-by-id/${userId}`;
+          ? baseURI+"/api/user-profile/get-user-profile/me"
+          : baseURI+`/api/user-profile/get-user-profile-by-id/${userId}`;
       const response = await axios.get(url, { withCredentials: true });
 
       const data = response?.data?.data;
@@ -45,7 +46,7 @@ function Profile() {
       // Set preview URL only if image exists
       if (data?.image) {
         setPreviewImage(
-          `https://devconnector-1-backend.onrender.com/${data.image.replace(/\\/g, "/")}`
+          baseURI+`/${data.image.replace(/\\/g, "/")}`
         );
       }
 
@@ -84,8 +85,8 @@ function Profile() {
       });
 
       const apiURL = isSaved
-        ? "https://devconnector-1-backend.onrender.com/api/user-profile/update-user-profile"
-        : "https://devconnector-1-backend.onrender.com/api/user-profile/create-user-profile";
+        ? baseURI+"/api/user-profile/update-user-profile"
+        : baseURI+"/api/user-profile/create-user-profile";
 
       const method = isSaved ? axios.put : axios.post;
 

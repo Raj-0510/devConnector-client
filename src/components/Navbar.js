@@ -7,6 +7,7 @@ import CreatePostModal from "./CreatePostModal";
 import NotificationBell from "./NotificationBell";
 import { handleLogout } from "../common/utilFunctions";
 import SearchBar from "./SearchBar";
+import { baseURI } from "../common/baseURI";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Navbar() {
   const handleSearch = async () => {
     try {
       const res = await axios.get(
-        "https://devconnector-1-backend.onrender.com/api/user-profile/search",
+        baseURI+"/api/user-profile/search",
         {
           params: {
             q: searchTerm,

@@ -6,6 +6,7 @@ import { getProfileData } from "../common/commonApis";
 import { toast } from "react-toastify";
 import socket from "../socket";
 import MobileSidebar from "../components/MobileSidebar";
+import { baseURI } from "../common/baseURI";
 
 function Dashboard({ from, deleteButton, userId }) {
   const [postData, setPostData] = useState([]);
@@ -27,7 +28,7 @@ function Dashboard({ from, deleteButton, userId }) {
     try {
       const userData = await getProfileData(localStorage.getItem("userId"));
       await axios.post(
-        `https://devconnector-1-backend.onrender.com/api/feed/add-comment/${post?._id}`,
+        baseURI+`/api/feed/add-comment/${post?._id}`,
         { userName: userData?.userName, content: newComment },
         { withCredentials: true }
       );
@@ -48,8 +49,8 @@ function Dashboard({ from, deleteButton, userId }) {
     try {
       const url =
         from === "postsView"
-          ? `https://devconnector-1-backend.onrender.com/api/feed/get-user-posts/${userId}`
-          : "https://devconnector-1-backend.onrender.com/api/feed/get-all-posts";
+          ? baseURI+`/api/feed/get-user-posts/${userId}`
+          : baseURI+"/api/feed/get-all-posts";
       const response = await axios.get(url, { withCredentials: true });
       const data = response?.data;
       setPostData(data);
@@ -61,7 +62,7 @@ function Dashboard({ from, deleteButton, userId }) {
   const handleDeletePost = async (postId) => {
     try {
       const response = await axios.delete(
-        `https://devconnector-1-backend.onrender.com/api/feed/delete-post/${postId}`,
+        baseURI+`/api/feed/delete-post/${postId}`,
         { withCredentials: true }
       );
       toast.success(response.data.msg);
@@ -77,7 +78,7 @@ function Dashboard({ from, deleteButton, userId }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://devconnector-1-backend.onrender.com/api/feed/toggle-like/${post?._id}`,
+        baseURI+`/api/feed/toggle-like/${post?._id}`,
         {},
         { withCredentials: true }
       );
@@ -133,7 +134,7 @@ function Dashboard({ from, deleteButton, userId }) {
                 <img
                   src={
                     post?.profileImage
-                      ? `https://devconnector-1-backend.onrender.com/${post?.profileImage}`
+                      ? baseURI+`/${post?.profileImage}`
                       : "/default-avatar.png"
                   }
                   alt="user"
@@ -184,7 +185,7 @@ function Dashboard({ from, deleteButton, userId }) {
             {/* Image */}
             {post?.image && (
               <img
-                src={`https://devconnector-1-backend.onrender.com/${post?.image}`}
+                src={baseURI+`/${post?.image}`}
                 alt="post"
                 className="w-full rounded-md object-cover mt-3 max-h-[400px]"
               />

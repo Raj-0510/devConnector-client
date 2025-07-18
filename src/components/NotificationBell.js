@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import socket from "../socket";
 import { getProfileData } from "../common/commonApis";
+import { baseURI } from "../common/baseURI";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
@@ -46,7 +47,7 @@ const NotificationBell = () => {
                 className="flex items-center gap-3 p-3 hover:bg-gray-50 transition rounded-md"
               >
                 <img
-                  src={`https://devconnector-1-backend.onrender.com/${noti.image}`}
+                  src={baseURI+`/${noti.image}`}
                   alt={noti.userName}
                   className="w-6 h-6 rounded-full object-cover border"
                 />

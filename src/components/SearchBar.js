@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { baseURI } from "../common/baseURI";
 
 function SearchBar({ searchType = "user", onResultSelect }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +16,7 @@ function SearchBar({ searchType = "user", onResultSelect }) {
 
     try {
       const res = await axios.get(
-        "https://devconnector-1-backend.onrender.com/api/user-profile/search",
+        baseURI+"/api/user-profile/search",
         {
           params: {
             q: searchTerm,
@@ -82,7 +83,7 @@ function SearchBar({ searchType = "user", onResultSelect }) {
               >
                 <div className="flex items-center gap-3">
                   <img
-                    src={`https://devconnector-1-backend.onrender.com/${user.image}`}
+                    src={baseURI+`/${user.image}`}
                     alt={user.userName}
                     className="w-8 h-8 rounded-full object-cover"
                   />

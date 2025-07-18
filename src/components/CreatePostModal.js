@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { baseURI } from "../common/baseURI";
 
 export default function CreatePostModal({ showModal, setShowModal }) {
   const [postData, setPostData] = useState({
@@ -28,7 +29,7 @@ export default function CreatePostModal({ showModal, setShowModal }) {
         formData.append("image", postData.image);
       }
       const response = await axios.post(
-        "https://devconnector-1-backend.onrender.com/api/feed/create-post",
+        baseURI+"/api/feed/create-post",
         formData,
         {
           withCredentials: true,
