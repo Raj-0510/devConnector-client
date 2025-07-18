@@ -32,10 +32,10 @@ function Network() {
   const getAllUsersList = async () => {
     try {
       const response = await axios.get(
-        "https://devconnector-1-backend.onrender.com/api/profiles/",
-        {
-          withCredentials: true,
-        }
+        baseURI+"/api/profiles/",{
+       headers: {
+          Authorization: `Bearer ${token}`,
+        },}
       );
       const data = response?.data;
       setSuggestions(data || []);

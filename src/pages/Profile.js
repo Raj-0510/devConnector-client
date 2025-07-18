@@ -166,7 +166,7 @@ function Profile() {
                     <div className="w-32 h-32 rounded-full overflow-hidden border border-gray-300 mb-4">
                       {values.image ? (
                         <img
-                          src={URL.createObjectURL(values.image)}
+                          src={baseURI+URL.createObjectURL(values.image)}
                           alt="Preview"
                           className="w-full h-full object-cover"
                         />
