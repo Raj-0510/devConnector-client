@@ -82,9 +82,11 @@ function Navbar() {
         </button>
       </div>
 
+
       {/* Right Section: Profile + Logout */}
       <div className="flex items-center space-x-4">
         <SearchBar/>
+        <NotificationBell/>
         <Link to="/profile" className="hover:text-blue-500 transition-colors">
           <UserRound className="w-5 h-5" />
         </Link>
