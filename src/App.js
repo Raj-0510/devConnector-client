@@ -1,25 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import { ToastContainer } from "react-toastify";
+import { BrowserRouter as Router } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import AppRoutes from './routes/AppRoutes';
+import socket from './socket';
+import { useEffect } from 'react';
+
 
 function App() {
+
+useEffect(() => {
+  const userId = localStorage.getItem("userId");
+
+  const registerUser = () => {
+    console.log("in register User")
+    if (userId) {
+      socket.emit("register", userId);
+    }
+  };
+
+  socket.on("connect", registerUser);
+
+  socket.on("reconnect", registerUser);
+
+  return () => {
+    socket.off("connect", registerUser);
+    socket.off("reconnect", registerUser);
+  };
+}, []);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <Router>
+   <ToastContainer position="top-center" autoClose={1500} hideProgressBar={true} />
+   <AppRoutes />
+   </Router>
   );
 }
 
 export default App;
+ 
