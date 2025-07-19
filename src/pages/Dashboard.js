@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getProfileData } from "../common/commonApis";
 import { toast } from "react-toastify";
 import socket from "../socket";
@@ -11,10 +11,9 @@ import { baseURI } from "../common/baseURI";
 function Dashboard({ from, deleteButton, userId }) {
   const [postData, setPostData] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
   const [showCommentsMap, setShowCommentsMap] = useState({});
   const [newComment, setNewComment] = useState("");
-      const token=localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   const toggleComments = (postId) => {
     setShowCommentsMap((prev) => ({
@@ -91,14 +90,16 @@ function Dashboard({ from, deleteButton, userId }) {
       const response = await axios.post(
         baseURI + `/api/feed/toggle-like/${post?._id}`,
         {},
-       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      console.log("userId>>",userId)
+      console.log("post?.userId?._id>>",post?.userId?._id)
 
-      console.log("response>>", response);
+
       if (response?.data?.liked) {
         socket.emit("sendNotification", {
           senderId: userId,
@@ -140,9 +141,7 @@ function Dashboard({ from, deleteButton, userId }) {
             key={post._id}
             className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition-shadow w-11/12 mx-auto mb-4"
           >
-            {/* User Info */}
 
-            {/* Top Row: User Info and Delete Button */}
             <div className="flex items-center mb-2">
               {/* User Info */}
               <div className="flex items-center gap-3">

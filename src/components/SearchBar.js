@@ -11,21 +11,19 @@ function SearchBar({ searchType = "user", onResultSelect }) {
   const wrapperRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    e.preventDefault()
     if (!searchTerm) return;
 
     try {
-      const res = await axios.get(
-        baseURI+"/api/user-profile/search",
-        {
-          params: {
-            q: searchTerm,
-            type: searchType,
-            page: 1,
-            limit: 10,
-          },
-        }
-      );
+      const res = await axios.get(baseURI + "/api/user-profile/search", {
+        params: {
+          q: searchTerm,
+          type: searchType,
+          page: 1,
+          limit: 10,
+        },
+      });
       setSearchResults(res.data.results);
       setSearchList(true);
     } catch (error) {
@@ -34,7 +32,7 @@ function SearchBar({ searchType = "user", onResultSelect }) {
   };
 
   const handleUserClick = (user) => {
-     navigate(`/profile`, {
+    navigate(`/profile`, {
       state: { _id: user?.userId },
     });
     setSearchList(false);
@@ -54,21 +52,23 @@ function SearchBar({ searchType = "user", onResultSelect }) {
 
   return (
     <div className="relative w-full" ref={wrapperRef}>
+        <form onSubmit={handleSearch}>
       <div className="flex md:flex-row flex-col items-center gap-2 ">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full "
-          onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
-        <button
-          className="rounded-md bg-blue-400 text-white py-1 hover:bg-blue-600 px-1 md:px-2  w-full md:w-auto mt-2 md:mt-0"
-          onClick={handleSearch}
-        >
-          Search
-        </button>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+          />
+          <button
+            className="rounded-md bg-blue-400 text-white py-1 hover:bg-blue-600 px-1 md:px-2  w-full md:w-auto mt-2 md:mt-0"
+            type="submit"
+          >
+            Search
+          </button>
       </div>
+        </form>
 
       {searchTerm !== "" && searchList && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-80 overflow-y-auto">
@@ -83,7 +83,7 @@ function SearchBar({ searchType = "user", onResultSelect }) {
               >
                 <div className="flex items-center gap-3">
                   <img
-                    src={baseURI+`/${user.image}`}
+                    src={baseURI + `/${user.image}`}
                     alt={user.userName}
                     className="w-8 h-8 rounded-full object-cover"
                   />

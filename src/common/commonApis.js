@@ -3,7 +3,7 @@ import { baseURI } from "./baseURI";
 
 export const getProfileData = async (userId) => {
   try {
-      const token=localStorage.getItem("token");
+    const token=localStorage.getItem("token");
 
     const url = baseURI + `/api/user-profile/get-user-profile-by-id/${userId}`;
     const response = await axios.get(url, {
