@@ -13,7 +13,6 @@
   const userId = localStorage.getItem("userId");
 
   const registerUser = () => {
-    console.log("Registering user:", userId);
     if (userId) {
       socket.emit("register", userId);
     } else {

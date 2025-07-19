@@ -13,7 +13,6 @@ export const getProfileData = async (userId) => {
     });
 
     const data = response?.data?.data;
-    console.log("data>>", data);
     return data;
   } catch (err) {
     console.log("Error fetching profile", err);

@@ -9,6 +9,7 @@ const NotificationBell = () => {
 
   useEffect(() => {
     socket.on("getNotification", async (data) => {
+      console.log("data>>",data)
       const userData = await getProfileData(data?.senderId);
       console.log("userData>>",userData)
       const combinedNotification = {

@@ -96,8 +96,6 @@ function Dashboard({ from, deleteButton, userId }) {
           },
         }
       );
-      console.log("userId>>",userId)
-      console.log("post?.userId?._id>>",post?.userId?._id)
 
 
       if (response?.data?.liked) {
